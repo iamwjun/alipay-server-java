@@ -1,5 +1,7 @@
 package hello;
 
+import java.util.UUID;
+
 public class WXpay {
     /*
      * 这里填开户邮件中的商户号
@@ -21,5 +23,7 @@ public class WXpay {
      */
     public static final String APPSECRET = "01c6d59a3f9024db6336662ac95c8e74";
 
-
+    public static UUID generateNonceStr(){
+        return UUID.randomUUID();
+    }
 }
