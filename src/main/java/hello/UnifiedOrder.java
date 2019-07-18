@@ -11,7 +11,7 @@ public class UnifiedOrder {
         return ALPHABET.charAt(rng.nextInt(ALPHABET.length()));
     }
 
-   static String randomUUID(int length, int spacing, char spacerChar){
+    static String randomUUID(int length, int spacing, char spacerChar){
         StringBuilder sb = new StringBuilder();
         int spacer = 0;
         while(length > 0){
