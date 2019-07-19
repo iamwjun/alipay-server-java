@@ -1,5 +1,6 @@
 package hello;
 
+import com.alibaba.fastjson.JSON;
 import com.alipay.api.internal.util.AlipaySignature;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,12 @@ public class GreetingController {
         return  UnifiedOrder.tradeAppPay();
     }
 
+    @RequestMapping("/wxpay")
+    public String wxpay(){
+        System.out.println("请求成功");
+        return WXpay.initiateRequest("2016");
+    }
+
     @RequestMapping("/notifyUrl")
     public String notifyUrl(HttpServletRequest request){
         //获取支付宝POST过来反馈信息
@@ -48,13 +55,14 @@ public class GreetingController {
 //        //切记alipaypublickey是支付宝的公钥，请去open.alipay.com对应应用下查看。
 //        // boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
         //boolean flags = AlipaySignature.rsaCheckV1(params, Alipay.ALIPAY_PUBLIC_KEY, Alipay.CHARSET, "RSA2");
+        boolean flag = false;
         try{
-            boolean flag = AlipaySignature.rsaCheckV2(params, Alipay.ALIPAY_PUBLIC_KEY, Alipay.CHARSET, Alipay.SIGN_TYPE);
+            flag = AlipaySignature.rsaCheckV2(params, Alipay.ALIPAY_PUBLIC_KEY, Alipay.CHARSET, Alipay.SIGN_TYPE);
         }catch (Exception e){
             e.printStackTrace();
         }
         System.out.println(params.toString());
         System.out.println("回调成功");
-        return "success";
+        return flag ? "success" : "fail";
     }
 }
