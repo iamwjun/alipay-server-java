@@ -151,15 +151,11 @@ public class WXpay {
             if (result.get("return_code").equals(PromptMessage.FAIL.toString()) ) {
                 return new Message(405, PromptMessage.FAIL.message, result.get("return_msg"));
             }
-            return new Message(response.getStatus(), PromptMessage.SUCCESS.message, JSONObject.toJSONString(result));
+            return new Message(response.getStatus(), PromptMessage.SUCCESS.message, JSONObject.parseObject(JSON.toJSONString(result)));
         }catch (Exception e){
             return new Message(403, PromptMessage.FAIL.message, "");
         }
     }
-
-    /*
-     * 订单Map to Xml
-     */
 
     /**
      * 生成 MD5

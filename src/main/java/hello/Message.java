@@ -5,7 +5,7 @@ public class Message {
     private final String message;
     private final Object content;
 
-    public Message(int code, String message, String content){
+    public Message(int code, String message, Object content){
         this.code = code;
         this.message = message;
         this.content = content;
