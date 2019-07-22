@@ -26,8 +26,12 @@ public class UnifiedOrder {
         return sb.toString();
     }
 
-    public static Message tradeAppPay(){
+    public static Message alipayTradeAppPay(){
         System.out.println(randomUUID(16, 4, '-'));
         return Alipay.tradeAppPay(randomUUID(16, 4, '-'));
+    }
+
+    public static Message wechatTradAppPay(){
+        return WXpay.initiateRequest(randomUUID(16, 4, '-'));
     }
 }

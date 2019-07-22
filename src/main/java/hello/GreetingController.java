@@ -1,6 +1,5 @@
 package hello;
 
-import com.alibaba.fastjson.JSON;
 import com.alipay.api.internal.util.AlipaySignature;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,14 +24,14 @@ public class GreetingController {
 
     @RequestMapping("/alipay")
     public Message alipay(){
-        System.out.println("请求成功");
-        return  UnifiedOrder.tradeAppPay();
+        System.out.println("支付宝下单请求成功");
+        return  UnifiedOrder.alipayTradeAppPay();
     }
 
     @RequestMapping("/wxpay")
-    public String wxpay(){
-        System.out.println("请求成功");
-        return WXpay.initiateRequest("2016");
+    public Message wxpay(){
+        System.out.println("微信支付请求成功");
+        return UnifiedOrder.wechatTradAppPay();
     }
 
     @RequestMapping("/notifyUrl")

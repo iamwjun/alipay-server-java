@@ -1,14 +1,22 @@
 package hello;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -20,7 +28,22 @@ public class WXpay {
         MD5, HMACSHA256
     }
 
+    public enum PromptMessage {
+        FAIL("下单失败"), SUCCESS("下单成功");
+
+        private final String message;
+
+        private PromptMessage(String message) {
+            this.message = message;
+        }
+    }
+
     public static final String FIELD_SIGN = "sign";
+
+    /*
+     * 统一下单地址
+     */
+    public static final String URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
     /*
      * 这里填开户邮件中的商户号
@@ -105,7 +128,7 @@ public class WXpay {
         map.put("out_trade_no", outTradeNO);
         map.put("spbill_create_ip", ipAddress);
         map.put("total_fee", "1");
-        map.put("trade_type", outTradeNO);
+        map.put("trade_type", "APP");
 
         final String sign = generateSign(map, SignType.MD5);
         map.put("sign", sign);
@@ -113,19 +136,20 @@ public class WXpay {
         return map;
     }
 
-    public static String initiateRequest(String outTradeNO) {
+    public static Message initiateRequest(String outTradeNO) {
         try {
             Map<String, String> map = generateOrderMap(outTradeNO);
-//            return mapToXml(map);
             HttpResponse<String> response = Unirest.post("https://api.mch.weixin.qq.com/pay/unifiedorder")
                     .header("Content-Type", "application/xml")
-                    .header("cache-control", "no-cache")
-                    .header("Postman-Token", "f8d53df8-8aac-4bc8-b0ad-1cd3bd50f796")
                     .body(mapToXml(map))
                     .asString();
-            return response.toString();
+            Map<String, String> result = xmlToMap(response.getBody());
+            if (result.get("return_code").equals(PromptMessage.FAIL.toString()) ) {
+                return new Message(405, PromptMessage.FAIL.message, result.get("return_msg"));
+            }
+            return new Message(response.getStatus(), PromptMessage.SUCCESS.message, JSONObject.toJSONString(result));
         }catch (Exception e){
-            return "error";
+            return new Message(403, PromptMessage.FAIL.message, "");
         }
     }
 
@@ -204,5 +228,40 @@ public class WXpay {
         catch (Exception ex) {
         }
         return output;
+    }
+
+    /**
+     * XML格式字符串转换为Map
+     *
+     * @param strXML XML字符串
+     * @return XML数据转换后的Map
+     * @throws Exception
+     */
+    public static Map<String, String> xmlToMap(String strXML) throws Exception {
+        try {
+            Map<String, String> data = new HashMap<String, String>();
+            DocumentBuilder documentBuilder = WXPayXmlUtil.newDocumentBuilder();
+            InputStream stream = new ByteArrayInputStream(strXML.getBytes("UTF-8"));
+            org.w3c.dom.Document doc = documentBuilder.parse(stream);
+            doc.getDocumentElement().normalize();
+            NodeList nodeList = doc.getDocumentElement().getChildNodes();
+            for (int idx = 0; idx < nodeList.getLength(); ++idx) {
+                Node node = nodeList.item(idx);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    org.w3c.dom.Element element = (org.w3c.dom.Element) node;
+                    data.put(element.getNodeName(), element.getTextContent());
+                }
+            }
+            try {
+                stream.close();
+            } catch (Exception ex) {
+                // do nothing
+            }
+            return data;
+        } catch (Exception ex) {
+            System.out.println(String.format("Invalid XML, can not convert to map. Error message: %s. XML content: %s", ex.getMessage(), strXML));
+            throw ex;
+        }
+
     }
 }

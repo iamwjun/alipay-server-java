@@ -3,7 +3,7 @@ package hello;
 public class Message {
     private final int code;
     private final String message;
-    private final String content;
+    private final Object content;
 
     public Message(int code, String message, String content){
         this.code = code;
@@ -19,7 +19,7 @@ public class Message {
         return message;
     }
 
-    public String getContent() {
+    public Object getContent() {
         return content;
     }
 }
