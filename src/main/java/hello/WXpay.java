@@ -144,6 +144,10 @@ public class WXpay {
                     .body(mapToXml(map))
                     .asString();
             Map<String, String> result = xmlToMap(response.getBody());
+            // partnerid package timestamp 三个参数参见 https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12
+            result.put("partnerid", MCHID);
+            result.put("package", "Sign=WXPay");
+            result.put("timestamp", String.valueOf(System.currentTimeMillis()));
             if (result.get("return_code").equals(PromptMessage.FAIL.toString()) ) {
                 return new Message(405, PromptMessage.FAIL.message, result.get("return_msg"));
             }
