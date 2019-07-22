@@ -52,7 +52,7 @@ public class Alipay {
         model.setTotalAmount("0.01");
         model.setProductCode("QUICK_MSECURITY_PAY");
         request.setBizModel(model);
-        request.setNotifyUrl("http://amoro.eicp.net:30390/notifyUrl");
+        request.setNotifyUrl("http://oicq362934348.eicp.net/notifyUrl");
         try {
             //这里和普通的接口调用不同，使用的是sdkExecute
             AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
