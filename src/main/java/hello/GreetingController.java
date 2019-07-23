@@ -34,8 +34,8 @@ public class GreetingController {
         return UnifiedOrder.wechatTradAppPay();
     }
 
-    @RequestMapping("/notifyUrl")
-    public String notifyUrl(HttpServletRequest request){
+    @RequestMapping("/alipay/notifyUrl")
+    public String alipayNotifyUrl(HttpServletRequest request){
         //获取支付宝POST过来反馈信息
         Map<String,String> params = new HashMap<String,String>();
         Map requestParams = request.getParameterMap();
@@ -63,5 +63,14 @@ public class GreetingController {
         System.out.println(params.toString());
         System.out.println("回调成功");
         return flag ? "success" : "fail";
+    }
+
+    @RequestMapping("/wxpay/notifyUrl")
+    public String wxpayNotifyUrl(HttpServletRequest request) {
+        Map<String,String> params = new HashMap<String,String>();
+        Map requestParams = request.getParameterMap();
+        System.out.println(requestParams.toString());
+        System.out.println("回调成功");
+        return "success";
     }
 }

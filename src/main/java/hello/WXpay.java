@@ -124,7 +124,7 @@ public class WXpay {
         map.put("body", "app");
         map.put("mch_id", MCHID);
         map.put("nonce_str", nonceStr);
-        map.put("notify_url", "http://wxpay.wxutil.com/pub_v2/pay/notify.v2.php");
+        map.put("notify_url", "http://oicq362934348.eicp.net/wxpay/notifyUrl");
         map.put("out_trade_no", outTradeNO);
         map.put("spbill_create_ip", ipAddress);
         map.put("total_fee", "1");
@@ -139,6 +139,7 @@ public class WXpay {
     public static Message initiateRequest(String outTradeNO) {
         try {
             Map<String, String> map = generateOrderMap(outTradeNO);
+            System.out.println(map.toString());
             HttpResponse<String> response = Unirest.post("https://api.mch.weixin.qq.com/pay/unifiedorder")
                     .header("Content-Type", "application/xml")
                     .body(mapToXml(map))
