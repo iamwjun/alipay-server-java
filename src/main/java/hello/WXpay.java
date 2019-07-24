@@ -46,19 +46,18 @@ public class WXpay {
     public static final String URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
     /*
-     * 这里填开户邮件中的商户号
+     * MCHID 这里填开户邮件中的商户号
+     * APPID 这里填开户邮件中的（公众账号APPID或者应用APPID）
+     * KEY这 里请使用商户平台登录账户和密码登录http://pay.weixin.qq.com 平台设置的“API密钥”，为了安全，请设置为32字符串。
+     * 微信SDK上参数
+     * public static final String MCHID = "1225312702";
+     * public static final String APPID = "wx426b3015555a46be";
+     * public static final String  KEY = "e10adc3949ba59abbe56e057f20f883e";
      */
-    public static final String MCHID = "1225312702";
 
-    /*
-     * 这里填开户邮件中的（公众账号APPID或者应用APPID）
-     */
-    public static final String APPID = "wx426b3015555a46be";
-
-    /*
-     * 这里请使用商户平台登录账户和密码登录http://pay.weixin.qq.com 平台设置的“API密钥”，为了安全，请设置为32字符串。
-     */
-    public static final String  KEY = "e10adc3949ba59abbe56e057f20f883e";
+    public static final String MCHID = "1520833901";
+    public static final String APPID = "wxb20b120d6bb16335";
+    public static final String  KEY = "didida123DIDIDAAAAAAA99008899KKK";
 
     /*
      * 改参数在JSAPI支付（open平台账户不能进行JSAPI支付）的时候需要用来获取用户openid，可使用APPID对应的公众平台登录http://mp.weixin.qq.com 的开发者中心获取AppSecret。
